@@ -20,5 +20,8 @@ export default () => {
     `;
   }
 
-  return html`<img src=${file.url} />`;
+  return html`
+    <${DragAndDrop} onFile=${onFile} hidden=${true} />
+    <img src=${file.url} />
+  `;
 };
