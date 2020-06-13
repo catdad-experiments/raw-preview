@@ -7,6 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="keywords" content="raw image,raw,cr2,cr3,nef,pef,dng,arw,orf,javascript,catdad">
 
+  <link rel="stylesheet" type="text/css" href="src/style.css">
 </head>
 <body>
   <div id="unsupported" class="unsupported limit">
@@ -19,6 +20,7 @@
   <script type="module">
     document.querySelector('#unsupported').remove();
   </script>
+  <script src="https://cdn.jsdelivr.net/npm/exifreader@3.12.0/dist/exif-reader.min.js"></script>
   <script type="module" async>
     import loader from './src/loader.js';
 
