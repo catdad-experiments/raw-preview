@@ -48,7 +48,11 @@ export default ({ onFile, hidden = false } = {}) => {
   ];
 
   if (!hidden) {
-    elems.push(html`<div class=dnd onClick=${onClick}>Click to choose a file or drag it here</div>`);
+    elems.push(html`
+      <div class=dnd onClick=${onClick}>
+        <div class=container>Click to choose a file or drag it here<//>
+      </div>
+    `);
   }
 
   return elems;
