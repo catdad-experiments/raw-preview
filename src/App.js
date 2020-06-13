@@ -22,6 +22,6 @@ export default () => {
 
   return html`
     <${DragAndDrop} onFile=${onFile} hidden=${true} />
-    <img src=${file.url} />
+    <div class=img><img src=${file.url} /><//>
   `;
 };

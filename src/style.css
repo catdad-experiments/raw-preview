@@ -1,6 +1,6 @@
 :root {
   --full: calc(var(--vh, 1vh) * 100);
-  --limit: 600px;
+  --limit: 800px;
   --spacing: 1em;
   --opacity-recolor: 0.6;
   --create-space: 4.6rem;
@@ -43,6 +43,9 @@ html, body {
   display: flex;
   min-height: var(--full);
   width: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .hide {
@@ -77,7 +80,11 @@ html, body {
   font-size: 1.8rem;
 }
 
-img {
-  max-width: 100%;
-  max-height: 100%;
+.img {
+  max-width: var(--limit);
+  margin: 20px 0;
+}
+
+.img img {
+  width: 100%;
 }
