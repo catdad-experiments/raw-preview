@@ -1,14 +1,8 @@
-/* globals ExifReader */
+/* globals dcraw */
+
+import exifr from 'https://cdn.jsdelivr.net/npm/exifr@5.0.2/dist/full.esm.js';
 
 const IMAGES = ['image/jpeg', 'image/png'];
-
-const get = (obj = {}, [key, ...path] = [], fallback = undefined) => {
-  if (key in obj && path.length) {
-    return get(obj[key], path, fallback);
-  }
-
-  return key in obj ? obj[key] : fallback;
-};
 
 function toBase64(buffer) {
   let binary = '';
@@ -21,27 +15,17 @@ function toBase64(buffer) {
   return window.btoa(binary);
 }
 
-function getEmbeddedImage(exif, arrayBuffer) {
-  const offset = get(exif, ['StripOffsets', 'description']);
-  const length = get(exif, ['StripByteCounts', 'description']);
-
-  return offset && length ?
-    arrayBuffer.slice(offset, offset + length) :
-    null;
-}
-
 export default async file => {
   const { name, type, size } = file;
 
   const arrayBuffer = await file.arrayBuffer();
-  const tags = ExifReader.load(arrayBuffer, { expanded: true });
 
-  const jpg = getEmbeddedImage(tags.exif, arrayBuffer);
-  const data = jpg ? toBase64(jpg) :
-    IMAGES.includes(type) ? toBase64(arrayBuffer) :
-      tags.Thumbnail.base64;
+  const tags = await exifr.parse(arrayBuffer);
+  console.log('tags:', tags);
 
-  const url = `data:image/jpg;base64,${data}`;
+  const raw = dcraw(new Uint8Array(arrayBuffer), { extractThumbnail: true });
+
+  const url = `data:image/jpg;base64,${toBase64(raw.buffer)}`;
 
   return { name, type, size, tags, url };
 };
