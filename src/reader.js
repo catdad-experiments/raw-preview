@@ -2,7 +2,7 @@
 
 import exifr from 'https://cdn.jsdelivr.net/npm/exifr@5.0.2/dist/full.esm.js';
 
-const IMAGES = ['image/jpeg', 'image/png'];
+const IMAGES = ['image/jpeg', 'image/jpg', 'image/png'];
 const safe = prom => prom.then(data => [null, data]).catch(err => [err]);
 
 function toBase64(buffer) {
@@ -22,11 +22,12 @@ export default async file => {
   const arrayBuffer = await file.arrayBuffer();
   const [, tags = {}] = await safe(exifr.parse(arrayBuffer));
 
+  const mime = IMAGES.includes(type.toLowerCase()) ? type.toLocaleLowerCase() : 'image/jpg';
   const image = IMAGES.includes(type.toLowerCase()) ?
     arrayBuffer :
     dcraw(new Uint8Array(arrayBuffer), { extractThumbnail: true }).buffer;
 
-  const url = `data:image/jpg;base64,${toBase64(image)}`;
+  const url = `data:${mime};base64,${toBase64(image)}`;
 
   return { name, type, size, tags, url };
 };
