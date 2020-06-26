@@ -3,6 +3,7 @@
 import exifr from 'https://cdn.jsdelivr.net/npm/exifr@5.0.2/dist/full.esm.js';
 
 const IMAGES = ['image/jpeg', 'image/png'];
+const safe = prom => prom.then(data => [null, data]).catch(err => [err]);
 
 function toBase64(buffer) {
   let binary = '';
@@ -20,9 +21,7 @@ export default async file => {
 
   const arrayBuffer = await file.arrayBuffer();
 
-  const tags = await exifr.parse(arrayBuffer);
-  console.log('tags:', tags);
-
+  const [, tags = {}] = await safe(exifr.parse(arrayBuffer));
   const raw = dcraw(new Uint8Array(arrayBuffer), { extractThumbnail: true });
 
   const url = `data:image/jpg;base64,${toBase64(raw.buffer)}`;
