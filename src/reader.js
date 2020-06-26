@@ -22,10 +22,9 @@ export default async file => {
   const arrayBuffer = await file.arrayBuffer();
   const [, tags = {}] = await safe(exifr.parse(arrayBuffer));
 
-  const mime = IMAGES.includes(type.toLowerCase()) ? type.toLocaleLowerCase() : 'image/jpg';
-  const image = IMAGES.includes(type.toLowerCase()) ?
-    arrayBuffer :
-    dcraw(new Uint8Array(arrayBuffer), { extractThumbnail: true }).buffer;
+  const [mime, image] = IMAGES.includes(type.toLowerCase()) ?
+    [type.toLocaleLowerCase(), arrayBuffer] :
+    ['image/jpg', dcraw(new Uint8Array(arrayBuffer), { extractThumbnail: true }).buffer];
 
   const url = `data:${mime};base64,${toBase64(image)}`;
 
