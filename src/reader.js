@@ -20,11 +20,13 @@ export default async file => {
   const { name, type, size } = file;
 
   const arrayBuffer = await file.arrayBuffer();
-
   const [, tags = {}] = await safe(exifr.parse(arrayBuffer));
-  const raw = dcraw(new Uint8Array(arrayBuffer), { extractThumbnail: true });
 
-  const url = `data:image/jpg;base64,${toBase64(raw.buffer)}`;
+  const image = IMAGES.includes(type.toLowerCase()) ?
+    arrayBuffer :
+    dcraw(new Uint8Array(arrayBuffer), { extractThumbnail: true }).buffer;
+
+  const url = `data:image/jpg;base64,${toBase64(image)}`;
 
   return { name, type, size, tags, url };
 };
